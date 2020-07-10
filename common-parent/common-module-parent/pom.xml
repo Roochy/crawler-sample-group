@@ -15,7 +15,7 @@
         <log4j.version>1.2.17</log4j.version>
         <hessian.version>4.0.51</hessian.version>
         <fastjson.version>1.2.44</fastjson.version>
-        <zookeeper.version>3.4.10</zookeeper.version>
+        <zookeeper.version>3.4.14</zookeeper.version>
         <jedis.version>2.9.0</jedis.version>
         <spring.version>4.3.10.RELEASE</spring.version>
         <mybatis.page.version>5.0.4</mybatis.page.version>
