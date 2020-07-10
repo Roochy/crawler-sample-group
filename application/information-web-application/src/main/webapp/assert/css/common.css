@@ -1,0 +1,143 @@
+@charset "UTF-8";
+* {
+
+}
+.header {
+    margin: 20px auto 20px auto;
+}
+.header .title {
+    color: #614e3c;
+    font-size: 18px;
+    margin: 20px 0 20px 10px;
+    position: relative;
+}
+
+.header .back-button {
+    font-size: 14px;
+    position: absolute;
+    right: 10px;
+}
+
+.header .search-box {
+    border-top: 1px solid darkgrey;
+    border-bottom: 1px solid darkgrey;
+    padding: 10px 0;
+}
+
+.header .search-box .keyword {
+    background: white;
+    border: 1px solid #999;
+    height: 25px;
+    line-height: 25px;
+    margin-left: 5px;
+    padding: 0 5px;
+}
+
+.header .search-box .check {
+
+}
+
+.header .type-list {
+    display: flex;
+    flex-wrap: wrap-reverse;
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+}
+.header .type-list .type-item {
+    padding-right: 15px;
+    color: #3377aa;
+    cursor: pointer;
+}
+.header .type-list .type-item.focus {
+    color: #666;
+}
+.header .type-list .type-item.separator {
+    color: #666;
+}
+.content {
+    margin: auto;
+    padding-bottom: 20px;
+    overflow: hidden;
+}
+
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    position: relative;
+    bottom: -10px;
+}
+
+.tags .label {
+    line-height: 23px;
+    height: 23px;
+    margin: 10px 0 10px 0;
+}
+
+.tag {
+    margin: 10px 5px;
+    border: 1px solid darkgoldenrod;
+    width: 60px;
+    text-align: center;
+    border-radius: 5px;
+    position: relative;
+}
+
+.tag:hover {
+    background: palegoldenrod;
+    color: black;
+}
+
+.tag.focus {
+    background: palegoldenrod;
+    color: black;
+}
+
+.tag.focus:hover {
+    color: black;
+}
+
+.close-icon {
+    position: relative;
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    overflow: hidden;
+    opacity: 0.6;
+}
+.close-icon::before,
+.close-icon::after {
+    content: '';
+    position: absolute;
+    height: 2px;
+    width: 100%;
+    top: 50%;
+    left: 0;
+    margin-top: -1px;
+    background: #000;
+}
+.close-icon::before {
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+.close-icon::after {
+    -webkit-transform: rotate(-45deg);
+    -moz-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    -o-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+}
+.close-icon.big {
+    -webkit-transform: scale(3);
+    -moz-transform: scale(3);
+    -ms-transform: scale(3);
+    -o-transform: scale(3);
+    transform: scale(3);
+}
+.close-icon.hairline::before,
+.close-icon.hairline::after {
+    height: 1px;
+}

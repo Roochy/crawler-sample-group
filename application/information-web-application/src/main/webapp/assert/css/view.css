@@ -1,0 +1,21 @@
+@charset "UTF-8";
+.content .article-title {
+    margin: auto;
+    border-top: 1px solid darkgrey;
+    padding: 20px 0;
+}
+.content .meta-info-list {
+    position: relative;
+    border-top: 1px solid darkgrey;
+    padding-top: 10px;
+}
+.content .meta-info-list .meta-info {
+    margin: 10px auto;
+}
+.content .meta-info-list .meta-info.tags {
+    bottom: 10px;
+}
+.content .article-content {
+    border-top: 1px solid darkgrey;
+    padding-top: 20px;
+}

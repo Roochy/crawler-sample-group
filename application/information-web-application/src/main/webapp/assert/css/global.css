@@ -1,0 +1,38 @@
+@charset "UTF-8";
+* {
+    margin: 0px;
+    padding: 0px;
+    font-size: 14px;
+}
+
+body {
+    margin: auto;
+}
+
+a {
+    color: #3377aa;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+a:hover {
+    color: white;
+    background-color: #3377aa;
+    text-decoration: none;
+}
+
+li {
+    list-style: none;
+}
+
+input {
+    border-radius: 80px;
+}
+
+button {
+    border-radius: 10px;
+    width: 80px;
+    height: 25px;
+    margin-left: 10px;
+    color: #33778C;
+}

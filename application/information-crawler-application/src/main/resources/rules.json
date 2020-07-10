@@ -1,0 +1,27 @@
+{
+  "portal": "http://ifeve.com/",
+  "ListPageReg": "http://ifeve.com/category/\\w+/page/\\d+|http://ifeve.com/category/\\w+",
+  "SinglePageReg": "http://ifeve.com/[\\u4e00-\\u9fa5a-zA-Z0-9%]+",
+  "SinglePageSelector": {
+    "title": ".post .title",
+    "content": ".post .post_content",
+    "tag": ".bc_cat",
+    "author": ".post_author",
+    "publishTime": ".time.fr"
+  },
+  "tagMapList": [
+    {
+      "origin": "java",
+      "aip": "0,3",
+      "indicator": 1
+    },{
+      "origin": "c",
+      "aip": "0,4",
+      "indicator": 1
+    },{
+      "origin": "netty",
+      "aip": "0,3,5",
+      "indicator": 1
+    }
+  ]
+}

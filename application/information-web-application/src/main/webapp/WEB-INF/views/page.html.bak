@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <title>./Resources</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/assert/bootstrap/css/bootstrap.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/assert/css/global.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/assert/css/common.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/assert/css/page.css}"/>
+    <script type="text/javascript" th:src="@{/assert/js/jquery-3.2.1.min.js}"></script>
+    <script type="text/javascript" th:src="@{/assert/bootstrap/js/bootstrap.js}"></script>
+</head>
+<body>
+<div class="col-sm-8 col-md-8 col-lg-8 center">
+    <div class="header col-sm-7 col-md-7 col-lg-7">
+        <h1 class="title">./Resources</h1>
+        <div class="search-box">
+            <input class="check" type="radio" name="search_type" value="0" th:checked="info.title ne null or info.content eq null"/> 标题&nbsp;&nbsp;
+            <input class="check" type="radio" name="search_type" value="1" th:checked="info.content ne null"/> 内容
+            <input class="keyword" name="keyword"/>
+            <button class="search-button">搜索</button>
+        </div>
+        <ul class="type-list">
+            <li class="type-item" th:if="${info.tags ne null and info.tags ne ''}"><a th:href="@{/1}">ALL</a></li>
+            <li class="type-item focus" th:if="${info.tags eq null or info.tags eq ''}" th:text="ALL">ALL</li>
+            <li class="type-item separator">/</li>
+            <li class="type-item" th:if="${info.tags ne 'be'}"><a th:href="@{/info/be/1}">后端</a></li>
+            <li class="type-item focus" th:if="${info.tags eq 'be'}" th:text="后端">后端</li>
+            <li class="type-item separator">/</li>
+            <li class="type-item" th:if="${info.tags ne 'fe'}"><a th:href="@{/info/fe/1}">前端</a></li>
+            <li class="type-item focus" th:if="${info.tags eq 'fe'}" th:text="前端">前端</li>
+            <li class="type-item separator">/</li>
+            <li class="type-item" th:if="${info.tags ne 'java'}"><a th:href="@{/info/java/1}">Java</a></li>
+            <li class="type-item focus" th:if="${info.tags eq 'java'}" th:text="Java">Java</li>
+            <li class="type-item separator">/</li>
+            <li class="type-item" th:if="${info.tags ne 'c'}"><a th:href="@{/info/c/1}">C++</a></li>
+            <li class="type-item focus" th:if="${info.tags eq 'c'}">C++</li>
+            <li class="type-item separator">/</li>
+            <li class="type-item" th:if="${info.tags ne 'netty'}"><a th:href="@{/info/netty/1}">netty</a></li>
+            <li class="type-item focus" th:if="${info.tags eq 'netty'}" th:text="netty">netty</li>
+        </ul>
+    </div>
+    <div class="content col-sm-8 col-md-8 col-lg-8" th:if="${response.page ne null}">
+        <div class="article-item" th:each="ac:${response.page.data}">
+            <a th:text="${ac.title}" th:href="@{'/info/' + ${ac.id}}">article_title</a>
+            <span class="create-time" th:text="${ac.publishTime}">1979-01-01</span>
+            <div class="tags"><a class="tag" th:each="tg:${ac.tags.split(',')}" th:text="${tg}" th:href="@{/info/{tag}(tag=${tg})}"></a></div>
+        </div>
+        <ul class="pagination">
+            <li th:if="${response.page.pageIndex &gt; 1}"><a th:attr="data-page=1">首页</a></li>
+            <li th:if="${response.page.pageIndex &gt; 1}">
+                <a th:attr="data-page=${response.page.pageIndex - 1}">上一页</a>
+            </li>
+            <li th:if="${response.page.pageIndex + 1 &lt; response.page.total}">
+                <a  th:attr="data-page=${response.page.pageIndex + 1}">下一页</a>
+            </li>
+            <li th:if="${response.page.pageIndex &lt; response.page.total}"><a th:attr="data-page=${response.page.total}">尾页</a></li>
+        </ul>
+    </div>
+    <div class="content col-sm-5 col-md-5 col-lg-5" th:if="${response.page eq null}">
+        <div class="article-item-empty">
+            This channel is empty. You'd better get here later.
+        </div>
+    </div>
+</div>
+<script th:inline="javascript">let param = [[${info}]];</script>
+<script type="text/javascript">
+    const cur_url = window.location.href;
+    const curl_url_pattern = cur_url.substr(0, cur_url.lastIndexOf('/') > 0 ? cur_url.lastIndexOf('/') + 1 : cur_url.length);
+    $('.pagination li a').click((e) => {
+        let page = $(e.target).attr("data-page");
+        window.location = curl_url_pattern + page;
+    });
+    $('.search-button').click((e) => {
+        let location = cur_url;
+        if (location.indexOf("?") < 0) {
+            location = location + "?";
+        }
+        let val = $('input[name="search_type"]').checked;
+        if (param == null) {
+            param = {};
+        }
+        if (val == '1') {
+            param.content = $('input.keyword').val();
+        } else {
+            param.title = $('input.keyword').val();
+        }
+        for (let prop in param) {
+            location += prop + '=' + param[prop] + '&';
+        }
+        window.location = location;
+    });
+</script>
+</body>
+</html>

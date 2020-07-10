@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:v-bind="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <title>./Resources</title>
+    <link rel="stylesheet" type="text/css" href="/assert/bootstrap/css/bootstrap.css"/>
+    <link rel="stylesheet" type="text/css" href="/assert/css/global.css"/>
+    <link rel="stylesheet" type="text/css" href="/assert/css/common.css"/>
+    <link rel="stylesheet" type="text/css" href="/assert/css/page.css"/>
+    <link rel="stylesheet" type="text/css" href="/assert/css/view.css"/>
+    <script type="text/javascript" src="/assert/js/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="/assert/js/vue.min.js"></script>
+    <script type="text/javascript" src="/assert/bootstrap/js/bootstrap.js"></script>
+</head>
+<body>
+<div class="col-sm-8 col-md-8 col-lg-8 center" id="app">
+    <div class="header col-sm-7 col-md-7 col-lg-7">
+        <h1 class="title">./Resources<button class="back-button" @click="backList($event)" v-show="contentFlag == 1">返回</button></h1>
+        <div class="search-box">
+            <input class="check" type="radio" name="search_type" value="0" v-model="searchType"/> 标题&nbsp;&nbsp;
+            <input class="check" type="radio" name="search_type" value="1" v-model="searchType"/> 内容
+            <input class="keyword" name="keyword" v-model="keyword"/>
+            <button class="search-button" @click="search($event)">搜索</button>
+        </div>
+        <div class="tags all-tags">
+            <span class="label">全部标签：</span>
+            <a class="tag" v-bind:class="{focus: (param.tags==null || param.tags == '') && contentFlag == 0}" @Click="tagClick(null, $event)" href="#">全部</a>
+            <span class="tag-wrap" v-for="tag in tags" v-show="(param.tags == null || param.tags.indexOf(tag.kw)<0) && contentFlag == 0">
+                <a class="tag" @click="tagClick(tag.kw,$event)" href="#">{{tag.desc}}</a>
+                <span class="add-icon" @click="tagAppendClick(tag.kw, $event)">+</span>
+            </span>
+            <span class="tag-wrap" v-for="tag in tags" v-show="contentFlag == 1">
+                <a class="tag normal" @click="tagClick(tag.kw,$event)" href="#">{{tag.desc}}</a>
+            </span>
+        </div>
+        <div class="current-tags" v-show="param.tags != null && param.tags != '' && contentFlag == 0">
+            <span class="label">当前标签：</span>
+            <a class="tag focus" @click="tagRemoveClick('be', $event)" href="#" v-show="param.tags != null && param.tags.indexOf('be')>=0">后端<span class="close-icon"></span></a>
+            <a class="tag focus" @click="tagRemoveClick('fe', $event)" href="#" v-show="param.tags != null && param.tags.indexOf('fe')>=0">前端<span class="close-icon"></span></a>
+            <a class="tag focus" @click="tagRemoveClick('java', $event)" href="#" v-show="param.tags != null && param.tags.indexOf('java')>=0">Java<span class="close-icon"></span></a>
+            <a class="tag focus" @click="tagRemoveClick('c', $event)" href="#" v-show="param.tags != null && param.tags.indexOf('c')>=0">C++<span class="close-icon"></span></a>
+            <a class="tag focus" @click="tagRemoveClick('netty', $event)" href="#" v-show="param.tags != null && param.tags.indexOf('netty')>=0">Netty<span class="close-icon"></span></a>
+        </div>
+    </div>
+    <div class="content col-sm-8 col-md-8 col-lg-8" v-show="contentFlag == 0">
+        <div class="article-item" v-for="info in list">
+            <a @click="viewDetail(info, $event)" href="#">{{info.title}}</a>
+            <span class="create-time">{{info.publishTime.split(' ')[0]}}</span>
+            <div class="tags"><a class="tag" v-for="tag in info.tags.split(',')" @click="tagClick(tag, $event)" href=""><span v-for="pt in tags" v-if="pt.kw==tag">{{pt.desc}}</span></a></div>
+        </div>
+        <div class="load-more" v-show="page.total > page.pageIndex">加载更多</div>
+        <div class="no-more" v-show="page.pageIndex == page.total">没有更多了哦~</div>
+    </div>
+    <div class="content col-sm-8 col-md-8 col-lg-8 invisible" v-show="list != null && list.length > 0 && contentFlag == 0">
+        <div class="article-item-empty">
+            This channel is empty. You'd better get here later.
+        </div>
+    </div>
+    <div class="content col-sm-7 col-md-7 col-lg-7" v-show="contentFlag == 1">
+        <h3 class="article-title">{{detail.title}}</h3>
+        <div class="meta-info-list">
+            <div class="author meta-info"><span>作者：</span><span>{{detail.author}}</span></div>
+            <div class="source meta-info"><a v-bind:href="detail.source">访问源网站</a></div>
+            <div class="publish-time meta-info"><span>收录时间：</span><span>{{detail.publishTime}}</span></div>
+            <div class="tags meta-info"><span class="label">文章标签：</span><a class="tag" v-for="t in detail.tags.split(',')" @click="tagClick(t, $event)"><span v-for="pt in tags" v-if="pt.kw==t">{{pt.desc}}</span></a></div>
+        </div>
+        <div class="article-content" v-html="detail.content">{{detail.content}}</div>
+    </div>
+</div>
+<script type="text/javascript">
+    const app = new Vue({
+        el: "#app",
+        data: {
+            loadLock:0,
+            contentFlag: 0,
+            searchType: '0',
+            keyword: '',
+            tags:[{desc: '后端', kw: 'be'}, {desc: '前端', kw: 'fe'}, {desc: 'java', kw: 'java'}, {desc: 'C', kw: 'c'},{desc: 'netty', kw: 'netty'}],
+            param: {},
+            detail: {title: '', content: '', author: '', source:'', publishTime: '', tags:'a,b'},
+            list: [],
+            page: {},
+        },
+        created: function() {
+            $.get("/info",function(data) {listPageCallback(data)},"json")
+            $(window).scroll(function (e) {
+                if (app.loadLock != 0) return;
+                let visibleHeight = $(window).height();
+                let scrollTop = $(window).scrollTop();
+                let docHeight = $(document).height();
+                if (scrollTop + visibleHeight + 100 > docHeight) {
+                    app.loadLock = 1;
+                    if (app.page.pageIndex != null && app.page.pageIndex < app.page.total) {
+                        app.param.pageIndex = app.page.pageIndex + 1;
+                        $.get("/info",app.param, function(data) {loadMore(data)},"json")
+                    }
+                }
+            });
+        },
+        methods: {
+            search: function (e) {
+                e.preventDefault();
+                let param = {};
+                if (app.searchType == '0') {
+                    param.title = app.keyword;
+                } else {
+                    param.content = app.keyword;
+                }
+                $.get("/info", param, function(data) {listPageCallback(data)},"json")
+            },
+            viewDetail: function(info, e) {
+                e.preventDefault();
+                app.contentFlag = 1;
+                app.detail = info;
+                $(window).scrollTop(0);
+            },
+            backList: function(e) {
+                e.preventDefault();
+                app.contentFlag = 0;
+            },
+            tagClick: function (tag, e) {
+                e.preventDefault();
+                app.contentFlag = 0;
+                app.loadLock = 0;
+                app.param.tags = tag;
+                $.get("/info", app.param, function(data) {listPageCallback(data)},"json")
+            },
+            tagAppendClick: function (tag, e) {
+                e.preventDefault();
+                app.loadLock = 0;
+                if (app.param.tags != null && app.param.tags.length>0) {
+                    app.param.tags = app.param.tags + ',' + tag;
+                } else {
+                    app.param.tags = tag;
+                }
+                $.get("/info", app.param, function(data) {listPageCallback(data)},"json")
+            },
+            tagRemoveClick: function (tag, e) {
+                e.preventDefault();
+                app.loadLock = 0;
+                let tagList = app.param.tags.split(',');
+                let newTagParam = '';
+                for (let i = 0; i < tagList.length; i++) {
+                    if (tagList[i] == tag) {
+                        continue;
+                    }
+                    newTagParam = newTagParam.concat(tagList[i]);
+                    if (i != tagList.length-1) {
+                        newTagParam = newTagParam.concat(',');
+                    }
+                }
+                app.param.tags = newTagParam;
+                $.get("/info", app.param, function(data) {listPageCallback(data)},"json")
+            }
+        },
+    });
+    function listPageCallback(data) {
+        if (data == null) {
+            return;
+        }
+        if (data.response.code == 101) {
+            return;
+        }
+        app.param = data.info;
+        let page = data.response.page;
+        app.list = page.data;
+        app.page = {pageIndex: page.pageIndex, total: page.total, count: page.count}
+    }
+
+    function loadMore(data) {
+        if (data == null) {
+            return;
+        }
+        if (data.response.code == 101) {
+            return;
+        }
+        app.param = data.info;
+        let page = data.response.page;
+        app.list = app.list.concat(page.data);
+        app.page = {pageIndex: page.pageIndex, total: page.total, count: page.count}
+        app.loadLock = 0;
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.origin.crawler.article.dao.InfoDAO">
+    <sql id="full_insert_column">id, title, content, tags, author, source, publish_time</sql>
+    <sql id="full_query_column">id, title, content, tags, author, source, publish_time publishTime</sql>
+
+    <select id="select" parameterType="org.origin.crawler.article.entity.Info" resultType="org.origin.crawler.article.entity.Info">
+        select <include refid="full_query_column"/> from info
+        <where>
+            <if test="id != 0">and id = #{id}</if>
+        </where>
+    </select>
+
+    <select id="list" parameterType="org.origin.crawler.article.entity.Info" resultType="org.origin.crawler.article.entity.Info">
+        select <include refid="full_query_column"/> from info
+        <where>
+            <if test="id != 0">and id = #{id}</if>
+            <if test="title != null and title != ''">and title like "%"#{title}"%"</if>
+            <if test="content != null and content != ''">and content like "%"#{content}"%"</if>
+            <if test="author != null and author != ''">and author like "%"#{author}"%"</if>
+            <if test="source != null and source != ''">and source like "%"#{source}"%"</if>
+            <if test="tags != null and tags != ''">
+                and
+                <foreach collection="tags.split(',')" item="tag" index="index" separator="or">
+                    locate(#{tag}, tags) > 0
+                </foreach>
+            </if>
+        </where>
+        order by publish_time desc
+    </select>
+
+    <select id="count" parameterType="org.origin.crawler.article.entity.Info" resultType="int">
+        select <include refid="full_query_column"/> from info
+        <where>
+            <if test="id != 0">and id = #{id}</if>
+            <if test="title != null and title != ''">and title like "%"#{title}"%"</if>
+            <if test="content != null and content != ''">and content like "%"#{content}"%"</if>
+            <if test="author != null and author != ''">and author like "%"#{author}"%"</if>
+            <if test="source != null and source != ''">and source like "%"#{source}"%"</if>
+            <if test="tags != null and tags != ''">
+                and
+                <foreach collection="tags.split(',')" item="tag" index="index" separator="or">
+                    locate(#{tag}, tags) > 0
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <insert id="insert" parameterType="org.origin.crawler.article.entity.Info" useGeneratedKeys="true">
+        insert into info(<include refid="full_insert_column"/>)
+        values(#{id}, #{title}, #{content}, #{tags}, #{author}, #{source}, #{publishTime})
+    </insert>
+
+    <delete id="delete" parameterType="org.origin.crawler.article.entity.Info">
+        delete from info
+        where id = #{id}
+    </delete>
+</mapper>

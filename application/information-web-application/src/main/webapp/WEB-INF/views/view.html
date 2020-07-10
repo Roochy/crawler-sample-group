@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>./Resources</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/assert/bootstrap/css/bootstrap.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/assert/css/global.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/assert/css/common.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/assert/css/view.css}"/>
+    <script type="text/javascript" th:src="@{/assert/js/jquery-3.2.1.min.js}"></script>
+    <script type="text/javascript" th:src="@{/assert/bootstrap/js/bootstrap.js}"></script>
+</head>
+<body>
+<div class="header col-sm-5 col-md-5 col-lg-5">
+    <h1 class="title">./Resources</h1>
+    <ul class="type-list">
+        <li class="type-item"><a th:href="@{/1}">ALL</a></li>
+        <li class="type-item separator">/</li>
+        <li class="type-item"><a th:href="@{/info/be/1}">后端</a></li>
+        <li class="type-item separator">/</li>
+        <li class="type-item"><a th:href="@{/info/fe/1}">前端</a></li>
+        <li class="type-item separator">/</li>
+        <li class="type-item"><a th:href="@{/info/java/1}">Java</a></li>
+        <li class="type-item separator">/</li>
+        <li class="type-item"><a th:href="@{/info/c/1}">C++</a></li>
+        <li class="type-item separator">/</li>
+        <li class="type-item"><a th:href="@{/info/netty/1}">netty</a></li>
+    </ul>
+</div>
+<div class="content col-sm-5 col-md-5 col-lg-5">
+    <h3 class="article-title" th:text="${response.data.title}">一个故事</h3>
+    <div class="meta-info">
+        <div class="author"><span>作者：</span><span th:text="${response.data.author}"></span></div>
+        <div class="source"><span>源网站：</span><span th:text="${response.data.source}"></span></div>
+        <div class="publish-time"><span>收录时间：</span><span th:text="${response.data.publishTime}"></span></div>
+        <div class="tags"><span>文章标签：</span><a class="tag" th:each="tg:${response.data.tags.split(',')}" th:text="${tg}" th:href="@{/info/{tag}(tag=${tg})}"></a></div>
+    </div>
+    <div class="article-content" th:utext="${response.data.content}">
+        内容
+    </div>
+</div>
+</body>
+</html>
