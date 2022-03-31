@@ -14,7 +14,7 @@
     <packaging>pom</packaging>
 
     <properties>
-        <spring.version>4.3.10.RELEASE</spring.version>
+        <spring.version>5.3.18</spring.version>
         <spring.boot.version>1.5.8.RELEASE</spring.boot.version>
         <mysql.version>8.0.11</mysql.version>
         <mybatis.version>3.4.1</mybatis.version>
